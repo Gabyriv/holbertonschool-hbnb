@@ -20,9 +20,8 @@ class AmenityList(Resource):
         # Placeholder for the logic to register a new amenity
         amenity_data = api.payload
 
-        existing_amenity = facade.get_amenity(amenity_data['amenity_id'])
-        if existing_amenity:
-            return {'error': 'Amenity already registered'}, 400
+        if 'name' not in amenity_data:
+            return {'error': 'Invalid input data'}, 400
 
         new_amenity = facade.create_amenity(amenity_data)
         return {
