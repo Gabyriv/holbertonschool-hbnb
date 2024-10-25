@@ -9,9 +9,9 @@ class Place(BaseModel):
         super().__init__()
         self.title = title
         self.description = description
-        self.price = self._validate_price(price)
-        self.latitude = self._validate_latitude(latitude)
-        self.longitude = self._validate_longitude(longitude)
+        self.price = self.validate_price(price)
+        self.latitude = self.validate_latitude(latitude)
+        self.longitude = self.validate_longitude(longitude)
         self.owner = owner  # Ensure this is a valid User instance
         self.amenities = amenities  # List of Amenity objects
 
