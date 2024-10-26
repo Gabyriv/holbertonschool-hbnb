@@ -4,12 +4,14 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
         self.amenity_repo = InMemoryRepository()
         self.place_repo = InMemoryRepository()
+        self.review_repo = InMemoryRepository()
 
     def create_user(self, user_data):
         user = User(**user_data)
@@ -81,3 +83,49 @@ class HBnBFacade:
             place.update(place_data)
             return place
         return None
+
+    def create_review(self, review_data):
+    # Placeholder for logic to create a review, including validation for user_id, place_id, and rating
+        user = self.user_repo.get(review_data['user_id'])
+        place = self.place_repo.get(review_data['place_id'])
+
+        if not user or not place:
+            raise ValueError("Invalid user or place ID")
+
+        review = Review(
+            text=review_data['text'],
+            rating=review_data['rating'],
+            user=user,
+            place=place
+        )
+        self.review_repo.add(review)
+        return review
+
+    def get_review(self, review_id):
+        # Placeholder for logic to retrieve a review by ID
+        return self.review_repo.get(review_id)
+
+    def get_all_reviews(self):
+        # Placeholder for logic to retrieve all reviews
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        # Placeholder for logic to retrieve all reviews for a specific place
+        return [review for review in self.get_all_reviews() if review.place.id == place_id]
+
+
+    def update_review(self, review_id, review_data):
+        # Placeholder for logic to update a review
+        review = self.get_review(review_id)
+        if review:
+            review.update(review_data)
+            return review
+        return None
+
+    def delete_review(self, review_id):
+        # Placeholder for logic to delete a review
+        review = self.get_review(review_id)
+        if review:
+            self.review_repo.delete(review_id)
+            return True
+        return False
