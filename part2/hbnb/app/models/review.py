@@ -6,20 +6,24 @@ from app.models.place import Place
 
 
 class Review(BaseModel):
-    def __init__(self, text, rating, place, user):
+    def __init__(self, text, rating, user, place):
         super().__init__()
-
-        if not 1 <= rating <= 5:
-            raise ValueError("Rating must be between 1 and 5.")
-
-        if not isinstance(place, Place):
-            raise TypeError("Place must be validated.")
-
-        if not isinstance(user, User):
-            raise TypeError("User must be validated.")
-
-
         self.text = text
-        self.rating = rating
-        self.place = place
-        self.user = user
+        self.rating = self._validate_rating(rating)
+        self.user = self._validate_user(user)
+        self.place = self._validate_place(place)
+
+    def _validate_rating(self, rating):
+        if not (1 <= rating <= 5):
+            raise ValueError("Rating must be between 1 and 5")
+        return rating
+
+    def _validate_user(self, user):
+        if not isinstance(user, User):
+            raise ValueError("User must be valid instances")
+        return user
+
+    def _validate_place(self, place):
+        if not isinstance(place, Place):
+            raise ValueError("Place must be valid instances")
+        return place
