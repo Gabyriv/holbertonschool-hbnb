@@ -7,13 +7,19 @@ from app.models.amenity import Amenity
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner, amenities=[]):
         super().__init__()
-        self.title = title
+        self.title = self.validate_title(title)
         self.description = description
         self.price = self.validate_price(price)
         self.latitude = self.validate_latitude(latitude)
         self.longitude = self.validate_longitude(longitude)
-        self.owner = owner  # Ensure this is a valid User instance
+        self.owner = self.set_owner(owner)  # Ensure this is a valid User instance
         self.amenities = amenities  # List of Amenity objects
+    def validate_title(self, title):
+        if not title:
+            raise ValueError("Title cannot be empty")
+        if len(title) > 100:
+            raise ValueError("Title must be less than 100 characters")
+        return title
 
     def validate_price(self, price):
         if price < 0:
@@ -38,12 +44,8 @@ class Place(BaseModel):
         """Set the owner of the place."""
         if not isinstance(owner, User):
             raise ValueError("Owner must be a valid User instance")
-        self.owner = owner
+        return owner
 
     def add_review(self, review):
         """Add a review to the place."""
         self.reviews.append(review)
-
-    def add_amenity(self, amenity):
-        """Add an amenity to the place."""
-        self.amenities.append(amenity)
