@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-from app.models.base_model import BaseModel
-from app.models.user import User
-from app.models.amenity import Amenity
+from part2.hbnb.app.models.base_model import BaseModel
+from part2.hbnb.app.models.user import User
 
 class Place(BaseModel):
     def __init__(self, title, description, price, latitude, longitude, owner, amenities=[]):
