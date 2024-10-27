@@ -8,7 +8,7 @@ from app.models.place import Place
 class Review(BaseModel):
     def __init__(self, text, rating, user, place):
         super().__init__()
-        self.text = text
+        self.text = self._validate_text(text)
         self.rating = self._validate_rating(rating)
         self.user = self._validate_user(user)
         self.place = self._validate_place(place)
@@ -27,3 +27,8 @@ class Review(BaseModel):
         if not isinstance(place, Place):
             raise ValueError("Place must be valid instances")
         return place
+
+    def _validate_text(self, text):
+        if not text:
+            raise ValueError("Text cannot be empty")
+        return text
