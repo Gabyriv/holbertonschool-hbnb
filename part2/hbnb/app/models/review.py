@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-from part2.hbnb.app.models.base_model import BaseModel
-from part2.hbnb.app.models.user import User
-from part2.hbnb.app.models.place import Place
+from hbnb.app.models.base_model import BaseModel
+from hbnb.app.models.user import User
+from hbnb.app.models.place import Place
 
 
 class Review(BaseModel):

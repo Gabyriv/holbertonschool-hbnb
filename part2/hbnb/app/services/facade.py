@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-from part2.hbnb.app.persistence.repository import InMemoryRepository
-from part2.hbnb.app.models.user import User
-from part2.hbnb.app.models.amenity import Amenity
-from part2.hbnb.app.models.place import Place
-from part2.hbnb.app.models.review import Review
+from hbnb.app.persistence.repository import InMemoryRepository
+from hbnb.app.models.user import User
+from hbnb.app.models.amenity import Amenity
+from hbnb.app.models.place import Place
+from hbnb.app.models.review import Review
 
 class HBnBFacade:
     def __init__(self):

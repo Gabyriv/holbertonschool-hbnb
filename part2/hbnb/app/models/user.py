@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from datetime import datetime
-from part2.hbnb.app.models.base_model import BaseModel
+from hbnb.app.models.base_model import BaseModel
 import re
 
 # This variable is used to validate the email format
