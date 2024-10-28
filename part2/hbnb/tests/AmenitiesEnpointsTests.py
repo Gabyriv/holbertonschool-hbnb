@@ -2,7 +2,7 @@
 
 import unittest
 from unittest.mock import patch, Mock
-from app import create_app
+from hbnb.app import create_app
 import json
 
 class TestAmenityEndpoints(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestAmenityEndpoints(unittest.TestCase):
             "name": "Swimming Pool"
         }
 
-    @patch('app.services.facade.create_amenity')
+    @patch('hbnb.app.services.facade.create_amenity')
     def test_create_amenity_success(self, mock_create_amenity):
         """Test successful amenity creation"""
         # Mock created amenity
@@ -50,7 +50,7 @@ class TestAmenityEndpoints(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data["error"], "Invalid input data")
 
-    @patch('app.services.facade.get_all_amenities')
+    @patch('hbnb.app.services.facade.get_all_amenities')
     def test_get_all_amenities(self, mock_get_all_amenities):
         """Test retrieving all amenities"""
         # Mock list of amenities
@@ -72,7 +72,7 @@ class TestAmenityEndpoints(unittest.TestCase):
         self.assertEqual(data[0]["name"], "Swimming Pool")
         self.assertEqual(data[1]["name"], "Gym")
 
-    @patch('app.services.facade.get_amenity')
+    @patch('hbnb.app.services.facade.get_amenity')
     def test_get_amenity_success(self, mock_get_amenity):
         """Test successful amenity retrieval"""
         # Mock amenity
@@ -88,7 +88,7 @@ class TestAmenityEndpoints(unittest.TestCase):
         self.assertEqual(data["name"], self.test_amenity_data["name"])
         self.assertEqual(data["id"], "test-uuid")
 
-    @patch('app.services.facade.get_amenity')
+    @patch('hbnb.app.services.facade.get_amenity')
     def test_get_amenity_not_found(self, mock_get_amenity):
         """Test amenity retrieval when amenity doesn't exist"""
         mock_get_amenity.return_value = None
@@ -99,8 +99,8 @@ class TestAmenityEndpoints(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data["error"], "Amenity not found")
 
-    @patch('app.services.facade.get_amenity')
-    @patch('app.services.facade.update_amenity')
+    @patch('hbnb.app.services.facade.get_amenity')
+    @patch('hbnb.app.services.facade.update_amenity')
     def test_update_amenity_success(self, mock_update_amenity, mock_get_amenity):
         """Test successful amenity update"""
         # Mock existing amenity
@@ -129,7 +129,7 @@ class TestAmenityEndpoints(unittest.TestCase):
         self.assertEqual(data["amenity"]["name"], "Updated Pool")
         self.assertEqual(data["message"], "Amenity updated successfully")
 
-    @patch('app.services.facade.get_amenity')
+    @patch('hbnb.app.services.facade.get_amenity')
     def test_update_amenity_not_found(self, mock_get_amenity):
         """Test amenity update when amenity doesn't exist"""
         mock_get_amenity.return_value = None

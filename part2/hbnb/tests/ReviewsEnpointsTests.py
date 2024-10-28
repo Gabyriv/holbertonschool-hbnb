@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 import unittest
-from unittest.mock import Mock, patch
-from app import create_app
-from app.models.user import User
-from app.models.place import Place
-from app.models.review import Review
+from unittest.mock import patch
+from hbnb.app import create_app
+from hbnb.app.models.user import User
+from hbnb.app.models.place import Place
+from hbnb.app.models.review import Review
 from uuid import uuid4
 
 class TestReviewEndpoints(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestReviewEndpoints(unittest.TestCase):
         self.user = User(first_name="John", last_name="Doe", email="john@example.com")
         self.user.id = str(uuid4())
 
-        self.place = Place(title="Test Place", description="Test Description", price=100)
+        self.place = Place(title="Test Place", description="Test Description", price=100, latitude=50, longitude=50, owner=self.user)
         self.place.id = str(uuid4())
 
         # Sample valid review data
@@ -71,7 +71,7 @@ class TestReviewEndpoints(unittest.TestCase):
 
     def test_get_all_reviews(self):
         """Test retrieving all reviews"""
-        with patch('app.services.facade.get_all_reviews') as mock_get_all:
+        with patch('hbnb.app.services.facade.get_all_reviews') as mock_get_all:
             mock_review = Review(
                 text="Test review",
                 rating=4,
@@ -91,7 +91,7 @@ class TestReviewEndpoints(unittest.TestCase):
     def test_get_review_by_id(self):
         """Test retrieving a specific review by ID"""
         review_id = str(uuid4())
-        with patch('app.services.facade.get_review') as mock_get:
+        with patch('hbnb.app.services.facade.get_review') as mock_get:
             mock_review = Review(
                 text="Test review",
                 rating=4,
@@ -109,7 +109,7 @@ class TestReviewEndpoints(unittest.TestCase):
 
     def test_get_nonexistent_review(self):
         """Test retrieving a review that doesn't exist"""
-        with patch('app.services.facade.get_review') as mock_get:
+        with patch('hbnb.app.services.facade.get_review') as mock_get:
             mock_get.return_value = None
 
             response = self.client.get(f'/api/v1/reviews/{str(uuid4())}')
@@ -127,8 +127,8 @@ class TestReviewEndpoints(unittest.TestCase):
             "place_id": self.place.id
         }
 
-        with patch('app.services.facade.get_review') as mock_get:
-            with patch('app.services.facade.update_review') as mock_update:
+        with patch('hbnb.app.services.facade.get_review') as mock_get:
+            with patch('hbnb.app.services.facade.update_review') as mock_update:
                 mock_review = Review(
                     text=update_data["text"],
                     rating=update_data["rating"],
@@ -148,8 +148,8 @@ class TestReviewEndpoints(unittest.TestCase):
     def test_delete_review(self):
         """Test deleting a review"""
         review_id = str(uuid4())
-        with patch('app.services.facade.get_review') as mock_get:
-            with patch('app.services.facade.delete_review') as mock_delete:
+        with patch('hbnb.app.services.facade.get_review') as mock_get:
+            with patch('hbnb.app.services.facade.delete_review') as mock_delete:
                 mock_review = Review(
                     text="Test review",
                     rating=4,
@@ -168,7 +168,7 @@ class TestReviewEndpoints(unittest.TestCase):
     def test_get_reviews_by_place(self):
         """Test retrieving all reviews for a specific place"""
         place_id = str(uuid4())
-        with patch('app.services.facade.get_reviews_by_place') as mock_get_by_place:
+        with patch('hbnb.app.services.facade.get_reviews_by_place') as mock_get_by_place:
             mock_review = Review(
                 text="Place review",
                 rating=5,
@@ -187,7 +187,7 @@ class TestReviewEndpoints(unittest.TestCase):
 
     def test_get_reviews_nonexistent_place(self):
         """Test retrieving reviews for a place that doesn't exist"""
-        with patch('app.services.facade.get_reviews_by_place') as mock_get_by_place:
+        with patch('hbnb.app.services.facade.get_reviews_by_place') as mock_get_by_place:
             mock_get_by_place.return_value = None
 
             response = self.client.get(f'/api/v1/reviews/places/{str(uuid4())}/reviews')
