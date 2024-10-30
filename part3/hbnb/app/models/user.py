@@ -8,7 +8,7 @@ import re
 # This variable is used to validate the email format
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 
-bcrypt = Bcrypt()
+flask_bcrypt = Bcrypt()
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, is_admin=False, password=None):
@@ -40,8 +40,8 @@ class User(BaseModel):
 
     def hash_password(self, password):
         """Hashes the password before storing it."""
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        return bcrypt.check_password_hash(self.password, password)
+        return flask_bcrypt.check_password_hash(self.password, password)
