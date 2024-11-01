@@ -30,7 +30,10 @@ class UserList(Resource):
 
         new_user = facade.create_user(user_data)
         return {'id': new_user.id,
-                'message': 'User created successfully'}, 201
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'email': new_user.email,
+        }, 201
 
     @api.response(200, 'Get all users')
     def get(self):
