@@ -2,6 +2,7 @@
 
 from flask_restx import Namespace, Resource, fields
 from hbnb.app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('places', description='Place operations')
 
@@ -34,19 +35,25 @@ place_model = api.model('Place', {
     'latitude': fields.Float(required=True, description='Latitude of the place'),
     'longitude': fields.Float(required=True, description='Longitude of the place'),
     'owner_id': fields.String(required=True, description='ID of the owner'),
-    'amenities': fields.List(fields.String, required=True, description="List of amenities ID's"),
-    'reviews': fields.List(fields.Nested(review_model), description="List of reviews")
+    'owner': fields.Nested(user_model, description='Owner of the place'),
+    'amenities': fields.List(fields.Nested(amenity_model), description='List of amenities'),
+    'reviews': fields.List(fields.Nested(review_model), description='List of reviews')
 })
-
 @api.route('/')
 class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def post(self):
         """Register a new place"""
         # Placeholder for the logic to register a new place
+        current_user = get_jwt_identity()
         place_data = api.payload
+
+        if place_data['owner_id'] != current_user:
+            return {'error': 'Unauthorized action'}, 403
 
         try:
             new_place = facade.create_place(place_data)
@@ -102,18 +109,35 @@ class PlaceResource(Resource):
                 {
                     'id': place.amenity.id,
                     'name': place.amenity.name
-                } for place.amenity in place.amenities]
+                } for place.amenity in place.amenities],
+            'reviews': [
+                {
+                    'id': review.id,
+                    'text': review.text,
+                    'rating': review.rating,
+                } for review in place.reviews],
         }, 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
-        # Placeholder for the logic to update a place by ID
+        current_user = get_jwt_identity()
         place_data = api.payload
-        updated_place = facade.update_place(place_id, place_data)
-        if not updated_place:
+
+        existing_place = facade.get_place(place_id)  # You'll need this method
+        if not existing_place:
             return {'error': 'Place not found'}, 404
-        return {'message': 'Place updated successfully'}, 200
+
+        if existing_place.owner.id != current_user:
+            return {'error': 'Unauthorized action'}, 403
+
+        try:
+            facade.update_place(place_id, place_data)
+            return {'message': 'Place updated successfully'}, 200
+        except ValueError as e:
+            return {'error': str(e)}, 400

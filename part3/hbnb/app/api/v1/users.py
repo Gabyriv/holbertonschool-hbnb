@@ -2,6 +2,7 @@
 
 from flask_restx import Namespace, Resource, fields
 from hbnb.app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('users', description='User operations')
 
@@ -69,18 +70,29 @@ class UserResource(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User details updated successfully')
     @api.response(404, 'User not found')
+    @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, user_id):
+        current_user = get_jwt_identity()
         user_data = api.payload
         user = facade.get_user(user_id)
 
         if not user:
             return {'error': 'User not found'}, 404
 
-        user.update(user_data)
-        return {
-            'id': user.id,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'password': user.password
-        }, 200
+        if user.id != current_user:
+            return {'error': 'Unauthorized action'}, 403
+
+        if user_data['email'] != user.email or user_data['password'] != user.password:
+            return {'error': 'You cannot modify email or password'}, 400
+
+        try:
+            user.update(user_data)
+            return {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                }, 200
+        except ValueError as e:
+            return {'error': str(e)}, 400
