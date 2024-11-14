@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from hbnb.app.services import facade
 
 api = Namespace('places', description='Place operations')
@@ -43,10 +44,16 @@ class PlaceList(Resource):
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def post(self):
         """Register a new place"""
         # Placeholder for the logic to register a new place
+        current_user = get_jwt_identity()  # Retrieve the user's identity from the token
         place_data = api.payload
+
+        if place_data['owner_id'] != current_user:
+            return {'error': 'Unauthorized action'}, 403
 
         try:
             new_place = facade.create_place(place_data)
@@ -109,10 +116,17 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
+        current_user = get_jwt_identity()
         place_data = api.payload
+
+        if place_data['owner_id'] != current_user:
+            return {'error': 'Unauthorized action'}, 403
+
         updated_place = facade.update_place(place_id, place_data)
         if not updated_place:
             return {'error': 'Place not found'}, 404

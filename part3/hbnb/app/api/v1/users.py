@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from hbnb.app.services import facade
 
 api = Namespace('users', description='User operations')
@@ -19,9 +20,14 @@ class UserList(Resource):
     @api.response(201, 'User successfully created')
     @api.response(400, 'Email already registered')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def post(self):
         """Register a new user"""
+        current_user = get_jwt_identity()
         user_data = api.payload
+
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
 
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data['email'])
@@ -68,17 +74,32 @@ class UserResource(Resource):
     @api.expect(user_model, validate=True)
     @api.response(200, 'User details updated successfully')
     @api.response(404, 'User not found')
+    @api.response(400, 'Invalid input data')
+    @api.response(403, 'Unauthorized action')
+    @jwt_required()
     def put(self, user_id):
+        current_user = get_jwt_identity()
         user_data = api.payload
         user = facade.get_user(user_id)
+
+        if current_user.get('id') != user.id:
+            return {'error': 'Unauthorized action'}, 403
 
         if not user:
             return {'error': 'User not found'}, 404
 
-        user.update(user_data)
+        if 'email' in user_data or 'password' in user_data:
+            return {'error': 'You cannot modify email or password.'}, 400
+
+        allowed_updates = {
+            'first_name': user_data.get('first_name'),
+            'last_name': user_data.get('last_name')
+        }
+
+        user.update(allowed_updates)
         return {
             'id': user.id,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'email': user.email
+            'email': user.email,
         }, 200
