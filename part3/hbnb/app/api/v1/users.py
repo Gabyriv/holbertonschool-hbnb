@@ -39,7 +39,7 @@ class UserList(Resource):
 
 
     @api.response(200, 'Get all users')
-    def get_all(self):
+    def get(self):
         """Get all users"""
         users = facade.get_all_users()
         return [{
