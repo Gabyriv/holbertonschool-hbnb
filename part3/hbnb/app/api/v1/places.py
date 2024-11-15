@@ -52,8 +52,6 @@ class PlaceList(Resource):
         current_user = get_jwt_identity()  # Retrieve the user's identity from the token
         place_data = api.payload
 
-        if place_data['owner_id'] != current_user:
-            return {'error': 'Unauthorized action'}, 403
 
         try:
             new_place = facade.create_place(place_data)
