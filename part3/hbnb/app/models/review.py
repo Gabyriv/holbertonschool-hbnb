@@ -3,9 +3,19 @@
 from hbnb.app.models.base_model import BaseModel
 from hbnb.app.models.user import User
 from hbnb.app.models.place import Place
+from hbnb.app import db
 
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+    __table_args__ = (
+        db.CheckConstraint('rating >= 1 AND rating <= 5', name='rating_check'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
     def __init__(self, text, rating, user, place):
         super().__init__()
         self.text = self._validate_text(text)

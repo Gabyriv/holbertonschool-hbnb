@@ -2,8 +2,18 @@
 
 from hbnb.app.models.base_model import BaseModel
 from hbnb.app.models.user import User
+from hbnb.app import db
 
 class Place(BaseModel):
+    __tablename__ = 'places'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String, nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+
     def __init__(self, title, description, price, latitude, longitude, owner, amenities=[]):
         super().__init__()
         self.title = self.validate_title(title)
