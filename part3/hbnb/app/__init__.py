@@ -22,6 +22,10 @@ def create_app(config_class="config.DevelopmentConfig"):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    bcrypt.init_app(app)
+    jwt.init_app(app)
+    db.init_app(app)
+
     authorizations = {
         "BearerAuth": {
             "type": "apiKey",
@@ -46,9 +50,5 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
     api.add_namespace(auth_ns, path='/api/v1/auth')
     api.add_namespace(admin_ns, path='/api/v1/admin')
-
-    bcrypt.init_app(app)
-    jwt.init_app(app)
-    db.init_app(app)
 
     return app
