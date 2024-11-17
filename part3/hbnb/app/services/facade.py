@@ -7,13 +7,16 @@ from hbnb.app.models.place import Place
 from hbnb.app.models.review import Review
 from hbnb.app.persistence.repository import SQLAlchemyRepository
 from hbnb.app.services.repositories.user_repo import UserRepository
+from hbnb.app.services.repositories.amenity_repo import AmenityRepository
+from hbnb.app.services.repositories.place_repo import PlaceRepository
+from hbnb.app.services.repositories.review_repo import ReviewRepository
 
 class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
-        self.amenity_repo = SQLAlchemyRepository(Amenity)
-        self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
+        self.amenity_repo = AmenityRepository()
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
 
     def create_user(self, user_data):
             user = User(**user_data)
