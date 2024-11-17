@@ -1,26 +1,77 @@
-# Part 2: Implementation of Business Logic and API Endpoints
+# Part 3: Authentication, Authorization, and Database Integration
 
-In this phase of the HBnB Project, you'll start implementing the application based on the design created in the previous stage. The primary goal here is to develop the Presentation and Business Logic layers using Python and Flask. This includes defining the essential classes, methods, and endpoints that form the core operational framework of the application.
+In this phase of the HBnB Project, we've enhanced the application by implementing secure user authentication, role-based authorization, and database persistence using SQLAlchemy. This upgrade brings robust security features and reliable data storage to our application.
 
-## Presentation Layer
+## New Features
 
-This Layer defines the services and API endpoints using Flask and flask-restx. You’ll structure the endpoints logically, ensuring clear paths and parameters for each operation.
-## Business Logic Layer
+### Authentication & Security
+- Password hashing using Flask-Bcrypt
+- JWT-based authentication with Flask-JWT-Extended
+- Role-based access control (RBAC)
+- Secure login endpoint with token generation
+- Protected API endpoints
 
-Building the core models and logic that drive the application’s functionality. This includes defining relationships, handling data validation, and managing interactions between different components.
+### Database Integration
+- SQLAlchemy ORM implementation
+- Entity mapping (User, Place, Review, Amenity)
+- Relationship management between entities
+- SQLite database for development
+
 ## Requirements
 
 ```pip
-pip install flask
-pip install flask-restx
+flask
+flask-restx
+flask-bcrypt
+flask-jwt-extended
+sqlalchemy
+flask-sqlalchemy
 ```
+
 ## Installation
 
-Clone this repository
-
+1. Clone this repository:
 ```bash
 git clone <repository>
-cd holbertonschool-hbnb
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Initialize the database:
+```bash
+flask shell
+>>> from app import db
+>>> db.create_all()
+```
+
+## API Endpoints
+
+### Public Endpoints
+- `GET /api/v1/places/`: List all places
+- `GET /api/v1/places/<place_id>`: Get place details
+
+### Protected Endpoints (Requires Authentication)
+- `POST /api/v1/places/`: Create a new place
+- `PUT /api/v1/places/<place_id>`: Update place (owner only)
+- `POST /api/v1/reviews/`: Create a review
+- `PUT /api/v1/reviews/<review_id>`: Update review (author only)
+- `DELETE /api/v1/reviews/<review_id>`: Delete review (author only)
+- `PUT /api/v1/users/<user_id>`: Update user profile (self only)
+
+### Admin-Only Endpoints
+- `POST /api/v1/users/`: Create new users
+- `PUT /api/v1/users/<user_id>`: Modify any user's details
+- `POST /api/v1/amenities/`: Add new amenities
+- `PUT /api/v1/amenities/<amenity_id>`: Modify amenities
+
+## Authentication
+
+To access protected endpoints, include the JWT token in the Authorization header:
+```bash
+Authorization: Bearer <your_jwt_token>
 ```
 
 ## Authors
