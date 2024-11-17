@@ -12,9 +12,13 @@ class Review(BaseModel):
         db.CheckConstraint('rating >= 1 AND rating <= 5', name='rating_check'),
     )
 
-    id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
+
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('reviews', lazy=True))
 
     def __init__(self, text, rating, user, place):
         super().__init__()
@@ -22,6 +26,8 @@ class Review(BaseModel):
         self.rating = self._validate_rating(rating)
         self.user = self._validate_user(user)
         self.place = self._validate_place(place)
+        self.user_id = user.id
+        self.place_id = place.id
 
     def _validate_rating(self, rating):
         if not (1 <= rating <= 5):

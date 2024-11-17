@@ -17,14 +17,14 @@ class User(BaseModel):
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+
     def __init__(self, first_name, last_name, email, password, is_admin=False):
         super().__init__()
         self.first_name = self._validate_name(first_name, "First")
         self.last_name = self._validate_name(last_name, "Last")
         self.email = self._validate_email(email)
         self.is_admin = is_admin
-        self.places = []
-        self.password = self.hash_password(password)
+        self.hash_password(password)
 
     def _validate_email(self, email):
         if not re.fullmatch(regex, email):

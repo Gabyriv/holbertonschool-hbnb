@@ -6,12 +6,11 @@ from hbnb.app import db
 class Amenity(BaseModel):
     __tablename__ = 'amenities'
 
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+
     def __init__(self, name):
         super().__init__()
         self.name = self._validate_name(name)
-
 
     def _validate_name(self, name):
         if len(name) == 0:
