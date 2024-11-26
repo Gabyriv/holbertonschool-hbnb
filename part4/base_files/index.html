@@ -7,13 +7,14 @@
     <title>Available Places</title>
     <link href="styles.css" rel="stylesheet">
     <link rel="icon" href="images/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
     <header class="header">
         <img class="logo" alt="hbnb logo" src="images/logo.png">
         <a href="index.html">Home</a>
-        <a href="login.html" class="login-button">Login</a>
+        <a href="login.html" class="login-button" id="login-link">Login</a>
     </header>
 
     <nav class="nav">
@@ -23,16 +24,22 @@
 
     <main class="container">
         <h1>Available Places</h1>
-        <div class="place-card">
-            <h2>Beautiful Beach House</h2>
-            <p>$200 per night</p>
-            <a href="place.html" class="details-button">View Details</a>
+        <div class="filter-section">
+            <label for="price-filter">Filter by price:</label>
+            <select id="price-filter">
+                <option value="all">All</option>
+                <option value="10">Up to $10</option>
+                <option value="50">Up to $50</option>
+                <option value="100">Up to $100</option>
+            </select>
         </div>
+        <div id="places-list"></div>
     </main>
 
     <footer class="footer">
         <p>&copy; 2024 HBnB. All rights reserved.</p>
     </footer>
+    <script src="scripts.js"></script>
 </body>
 
 </html>
