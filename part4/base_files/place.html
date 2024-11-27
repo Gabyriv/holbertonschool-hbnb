@@ -17,60 +17,35 @@
 
     <nav class="nav">
         <a href="index.html">Home</a>
-        <a href="login.html" class="nav-login">Login</a>
+        <a href="login.html" class="nav-login" id="login-link">Login</a>
     </nav>
 
     <main class="container">
-        <section class="place-details">
-            <h1>Beautiful Beach House</h1>
-            <div class="place-info">
-                <p><strong>Host:</strong> John Doe</p>
-                <p><strong>Price:</strong> $200 per night</p>
-                <p><strong>Location:</strong> Miami Beach, FL</p>
-                <p><strong>Description:</strong> A beautiful beachfront property with stunning ocean views.</p>
+        <section id="place-details">
+            <!-- Place details will be dynamically inserted here -->
+        </section>
+
+        <section id="reviews-section" class="reviews">
+            <h2>Reviews</h2>
+            <div id="reviews-container">
+                <!-- Reviews will be dynamically inserted here -->
             </div>
+        </section>
 
-            <section class="reviews">
-                <h2>Reviews</h2>
-                <div class="review-card">
-                    <p><strong>Jane Smith:</strong></p>
-                    <p>Great place to stay!</p>
-                    <p>Rating:
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star"></span>
-                    </p>
-                </div>
-                <div class="review-card">
-                    <p><strong>Robert Brown:</strong></p>
-                    <p>Amazing location and very comfortable.</p>
-                    <p>Rating:
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                    </p>
-                </div>
-            </section>
-
-            <section class="add-review">
-                <h2>Add a Review</h2>
-                <form class="form">
-                    <textarea placeholder="Write your review here..." required></textarea>
-                    <select required>
-                        <option value="">Select Rating</option>
-                        <option value="5">5 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="2">2 Stars</option>
-                        <option value="1">1 Star</option>
-                    </select>
-                    <button type="submit">Submit Review</button>
-                </form>
-            </section>
+        <section id="add-review" class="add-review" style="display: none;">
+            <h2>Add a Review</h2>
+            <form id="review-form" class="form">
+                <textarea name="review-text" placeholder="Write your review here..." required></textarea>
+                <select name="rating" required>
+                    <option value="">Select Rating</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+                <button type="submit">Submit Review</button>
+            </form>
         </section>
     </main>
 
