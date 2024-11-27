@@ -1,12 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('login-form');
+  const errorMessage = document.getElementById('error-message');
+  const loginButton = document.getElementById('login-button');
 
   if (loginForm) {
     loginForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      await loginUser(email, password);
+
+      // Clear any previous error messages
+      errorMessage.style.display = 'none';
+
+      // Show loading state
+      loginButton.disabled = true;
+      const originalButtonText = loginButton.textContent;
+      loginButton.innerHTML = '<span class="loading-spinner"></span>Logging in...';
+
+      try {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        await loginUser(email, password);
+      } catch (error) {
+        // Display error message
+        errorMessage.textContent = error.message || 'An error occurred during login. Please try again.';
+        errorMessage.style.display = 'block';
+      } finally {
+        // Reset button state
+        loginButton.disabled = false;
+        loginButton.innerHTML = originalButtonText;
+      }
     });
   }
 
@@ -15,46 +36,67 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loginUser(email, password) {
-  const response = await fetch('http://localhost:5000/api/v1/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  });
+  try {
+    const response = await fetch('http://localhost:5000/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
 
-  if (response.ok) {
     const data = await response.json();
-    document.cookie = `token=${data.access_token}; path=/`;
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Invalid credentials');
+    }
+
+    // Store JWT token in cookie
+    document.cookie = `token=${data.access_token}; path=/; max-age=86400`; // 86400 seconds = 1 day
+
+    // Redirect to main page
     window.location.href = 'index.html';
-  } else {
-    alert('Login failed: ' + response.statusText);
+  } catch (error) {
+    throw error;
   }
 }
 
 function checkAuthentication() {
   const token = getCookie('token');
-  const loginLink = document.getElementById('login-link');
+  const loginLink = document.querySelector('.nav-login');
 
-  if (!token) {
-    loginLink.style.display = 'block';
-  } else {
-    loginLink.style.display = 'none';
+  if (token) {
+    // User is logged in
+    if (loginLink) {
+      loginLink.textContent = 'Logout';
+      loginLink.href = '#';
+      loginLink.onclick = (e) => {
+        e.preventDefault();
+        logout();
+      };
+    }
     // Fetch places data if the user is authenticated
     fetchPlaces(token);
+    return true;
+  } else {
+    // User is not logged in
+    if (loginLink) {
+      loginLink.textContent = 'Login';
+      loginLink.href = 'login.html';
+    }
+    return false;
   }
 }
 
+function logout() {
+  document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  window.location.href = 'login.html';
+}
+
 function getCookie(name) {
-  // Function to get a cookie value by its name
-  // Your code here
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(name + '=')) {
-      return cookie.substring(name.length + 1);
-    }
-  }
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
   return null;
 }
 
@@ -79,12 +121,12 @@ function displayPlaces(places) {
     placeDiv.dataset.price = place.price;
 
     placeDiv.innerHTML = `
-      <div class="place-info">
+      <div class="place-info-index">
         <h2 class="place-title">${place.title}</h2>
         <div class="place-details">
           <p class="place-price"><span>Price per night:</span> $${place.price}</p>
         </div>
-        <button href="place.html?id=${place.id}" class="details-button">View Details</button>
+        <a href="place.html?id=${place.id}" class="details-button">View Details</a>
       </div>
     `;
 

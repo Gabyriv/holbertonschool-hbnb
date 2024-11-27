@@ -70,6 +70,7 @@ body {
     background-color: var(--white);
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: right;
 }
 
 .nav a {
@@ -77,6 +78,12 @@ body {
     text-decoration: none;
     margin-right: 20px;
 }
+
+.nav .nav-login {
+    color: var(--accent);
+    text-decoration: none;
+}
+
 
 .nav a:hover {
     color: var(--primary);
@@ -87,127 +94,143 @@ body {
     width: 80%;
     margin: 20px auto;
     padding: 20px;
+    text-align: center;
 }
 
 /* Places list container */
 #places-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
 
 /* Place card styles */
 .place-card {
-  background-color: var(--white);
-  border: var(--border_place_and_reviews);
-  border-radius: var(--border_radius_place_and_reviews);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--white);
+    border: var(--border_place_and_reviews);
+    border-radius: var(--border_radius_place_and_reviews);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .place-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .place-image {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
 }
 
 .place-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .place-info {
-  padding: 20px;
+    background-color: var(--white);
+    border: var(--border_place_and_reviews);
+    border-radius: var(--border_radius_place_and_reviews);
+    padding: var(--padding_place_and_reviews);
+    margin: var(--margin_place_and_review_cards) 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.place-info-index {
+    padding: 20px;
 }
 
 .place-title {
-  font-size: 1.5rem;
-  color: var(--purple-dark);
-  margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: var(--purple-dark);
+    margin: 0 0 10px 0;
 }
 
 .place-description {
-  color: var(--grey-medium);
-  font-size: 0.9rem;
-  margin-bottom: 15px;
-  line-height: 1.4;
+    color: var(--grey-medium);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.place-details-index {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .place-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+    color: var(--grey-medium);
+    margin-bottom: 15px;
+    font-size: 0.9rem;
 }
 
 .place-price {
-  color: var(--primary);
-  font-size: 1.2rem;
-  font-weight: bold;
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .place-price span {
-  color: var(--grey-medium);
-  font-size: 0.8rem;
-  font-weight: normal;
+    color: var(--grey-medium);
+    font-size: 0.8rem;
+    font-weight: normal;
 }
 
 .place-location {
-  color: var(--grey-medium);
-  font-size: 0.9rem;
+    color: var(--grey-medium);
+    font-size: 0.9rem;
 }
 
 .place-location i {
-  color: var(--accent);
-  margin-right: 5px;
+    color: var(--accent);
+    margin-right: 5px;
 }
 
 .amenities-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
 }
 
 .amenity-tag {
-  background-color: var(--purple-light);
-  color: var(--purple-dark);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  white-space: nowrap;
+    background-color: var(--purple-light);
+    color: var(--purple-dark);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
 }
 
 /* Filter section styles */
 .filter-section {
-  background-color: var(--white);
-  padding: 20px;
-  border-radius: var(--border_radius_place_and_reviews);
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: var(--border_radius_place_and_reviews);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #price-filter {
-  padding: 8px 12px;
-  border: 1px solid var(--grey-light);
-  border-radius: 4px;
-  font-size: 1rem;
-  color: var(--purple-dark);
-  background-color: var(--white);
-  cursor: pointer;
+    padding: 8px 12px;
+    border: 1px solid var(--grey-light);
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--purple-dark);
+    background-color: var(--white);
+    cursor: pointer;
 }
 
 #price-filter:focus {
-  outline: none;
-  border-color: var(--accent);
+    outline: none;
+    border-color: var(--accent);
 }
 
 /* Navigation styles */
@@ -266,6 +289,7 @@ body {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .details-button:hover {
@@ -299,6 +323,7 @@ body {
     border-radius: var(--border_radius_place_and_reviews);
     padding: var(--padding_place_and_reviews);
     margin: var(--margin_place_and_review_cards) 0;
+    text-align: left;
 }
 
 .review-card p {
@@ -377,36 +402,78 @@ section {
 
 /* Login form styles */
 .login-form {
-    max-width: 600px;
+    max-width: 500px;
     margin: 40px auto;
-    background-color: var(--white);
-    border: var(--border_place_and_reviews);
-    border-radius: var(--border_radius_place_and_reviews);
     padding: 20px;
+    background-color: var(--white);
+    border-radius: var(--border_radius_place_and_reviews);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--grey-medium);
 }
 
 .login-form input {
-    width: 100%;
-    padding: 2px;
-    margin: 10px 0;
+    width: 97%;
+    padding: 8px;
+    margin-bottom: 15px;
     border: var(--border_place_and_reviews);
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .login-form button {
     width: 100%;
+    padding: 10px;
     background-color: var(--accent);
     color: var(--white);
     border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .login-form button:hover {
     background-color: var(--primary);
+}
+
+.login-form button:disabled {
+    background-color: var(--grey-medium);
+    cursor: not-allowed;
+}
+
+.error-message {
+    background-color: var(--error);
+    color: var(--white);
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--white);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Footer styles */
@@ -504,6 +571,7 @@ section {
 .review-form select,
 .add-review textarea,
 .add-review select {
+    width: 97%;
     padding: 15px;
     border: var(--border_place_and_reviews);
     border-radius: 5px;

@@ -76,8 +76,6 @@ class PlaceList(Resource):
             'id': place.id,
             'title': place.title,
             'price': place.price,
-            'latitude': place.latitude,
-            'longitude': place.longitude,
         } for place in places], 200
 
 @api.route('/<place_id>')
@@ -86,11 +84,10 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     def get(self, place_id):
         """Get place details by ID"""
-        # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
-        place = facade.get_place(place_id)
-
+        place = facade.get_place_by_id(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
+
         return {
             'id': place.id,
             'title': place.title,
@@ -101,14 +98,20 @@ class PlaceResource(Resource):
             'owner': {
                 'id': place.owner.id,
                 'first_name': place.owner.first_name,
-                'last_name': place.owner.last_name,
-                'email': place.owner.email
-            },
-            'amenities': [
-                {
-                    'id': place.amenity.id,
-                    'name': place.amenity.name
-                } for place.amenity in place.amenities]
+                'last_name': place.owner.last_name
+            } if place.owner else None,
+            'amenities': [{
+                'id': amenity.id,
+                'name': amenity.name
+            } for amenity in place.amenities],
+            'reviews': [{
+                'id': review.id,
+                'text': review.text,
+                'rating': review.rating,
+                'user': {
+                    'name': review.user.first_name
+                }
+            } for review in place.reviews]
         }, 200
 
     @api.expect(place_model)
