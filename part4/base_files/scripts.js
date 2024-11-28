@@ -278,7 +278,7 @@ function displayPlaceDetails(place) {
 
       // Handle reviewer name
       let reviewerName = 'Anonymous';
-      if (review.user) {
+      if (review.user && review.user.first_name && review.user.last_name) {
         reviewerName = `${review.user.first_name} ${review.user.last_name}`;
       }
 
@@ -300,5 +300,84 @@ function displayPlaceDetails(place) {
     addReviewSection.style.display = 'block';
   } else {
     addReviewSection.style.display = 'none';
+  }
+}
+
+
+
+
+/* ======= Add Review Functions ======= */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const reviewForm = document.getElementById('review-form');
+  const token = checkAuthentication();
+  const placeId = getPlaceIdFromURL();
+
+  if (reviewForm) {
+    // Fetch place details to update the title
+    fetchPlaceTitle(token, placeId);
+
+    reviewForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const reviewText = reviewForm.elements['review-text'].value.trim();
+      const rating = reviewForm.elements['rating'].value;
+
+      if (!reviewText || !rating) {
+        alert('Please fill in all fields before submitting.');
+        return;
+      }
+
+      try {
+        await submitReview(token, placeId, reviewText, rating);
+        reviewForm.reset();
+      } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'Failed to submit review');
+      }
+    });
+  }
+});
+
+async function fetchPlaceTitle(token, placeId) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/v1/places/${placeId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Failed to fetch place details');
+
+    const titleElement = document.getElementById('place-title');
+    if (titleElement) titleElement.textContent = data.title || 'Unknown Place';
+  } catch (error) {
+    console.error('Error fetching place details:', error);
+  }
+}
+
+async function submitReview(token, placeId, reviewText, rating) {
+  const endpoint = `http://localhost:5000/api/v1/places/${placeId}/reviews`;
+  const requestBody = {
+    'text': reviewText,
+    'rating': parseInt(rating, 10)
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.ok) {
+      alert('Review submitted successfully!');
+      document.getElementById('review-form').reset();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to submit review: ${errorData.message}`);
+    }
+  } catch (error) {
+    alert(`An error occurred: ${error.message}`);
   }
 }
